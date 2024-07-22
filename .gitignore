@@ -24,3 +24,5 @@ custom_components/
 image/
 www/
 blueprints/
+
+zigbee.db*
