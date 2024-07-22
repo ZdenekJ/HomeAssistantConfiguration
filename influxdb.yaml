@@ -1,0 +1,27 @@
+host: 192.168.1.51
+port: 8086
+database: homeassistant
+username: !secret influxdb_user
+password: !secret influxdb_pass
+max_retries: 3
+default_measurement: state
+tags:
+  source: HA
+tags_attributes:
+  - friendly_name
+  - unit_of_measurement
+include:
+  entities:
+    - sensor.venkovni_teplota
+    - sensor.venkovni_tlak
+    - sensor.venkovni_vlhkost
+    - sensor.thermometer_balcony_battery_level
+    - sensor.chodba_pohybovy_senzor_baterie
+    - sensor.motion_senzor_bathroom_battery_level
+    - sensor.system_monitor_pouziti_procesoru
+    - sensor.system_monitor_propustnost_do_site_enp0s18
+    - sensor.system_monitor_propustnost_ze_site_enp0s18
+    - sensor.memory_free
+    - sensor.system_monitor_vyuziti_pameti
+    - sensor.disk_free
+    - sensor.system_monitor_vyuziti_disku

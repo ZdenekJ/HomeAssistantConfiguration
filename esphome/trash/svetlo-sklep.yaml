@@ -1,0 +1,59 @@
+substitutions:
+  name: switch-chodba
+  friendly_name: "Spínač chodba"
+  button_gpio: GPIO14
+  relay_gpio: GPIO13
+packages:
+  athom.mini-switch: !include templates/athom-mini-switch.yaml
+esphome:
+  name_add_mac_suffix: false
+
+
+ota:
+  password: !secret esphome_ota_password
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password  
+
+script:
+  - id: hass_light_toggle
+    then:
+      if:
+        condition:
+          api.connected:
+        then:
+          - if:
+              condition:
+                switch.is_off: relay
+              then:
+                # Turn the relay back on and turn on the light.
+                - switch.turn_on: relay
+
+                - homeassistant.service:
+                    service: script.prepnuti_svetla_na_chodbe
+              else:
+                # Have Home Assistant toggle the light.
+                - homeassistant.service:
+                    service: script.prepnuti_svetla_na_chodbe
+        else:
+          # When HA is unavailable, toggle the relay.
+          - switch.toggle: relay
+
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: $button_gpio
+    name: $project Wall Switch
+    id: tlacitko
+    filters:
+      - delayed_on: 10ms
+      - delayed_off: 10ms
+    on_state:
+      - script.execute: hass_light_toggle
+
+switch:
+  platform: gpio
+  id: relay
+  pin: $relay_gpio
+  restore_mode: ALWAYS_ON

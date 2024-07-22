@@ -1,0 +1,173 @@
+- id: '1636292424661'
+  alias: Zasílání infa
+  description: ''
+  trigger:
+  - platform: time
+    id: casovac
+    at: '15:45'
+  condition: []
+  action:
+  - device_id: 557cb94a3ddf00285c99fe0f9b332db4
+    domain: mobile_app
+    type: notify
+    message: Už je čas
+  mode: single
+- id: '1691251329784'
+  alias: Zhasnutí světel ve sklepě po zhasnutí schodiště
+  description: ''
+  trigger:
+  - platform: device
+    type: turned_off
+    device_id: 1b855313dfd5a3e5bec6e0ea1521dde4
+    entity_id: light.svetlo_schodiste_light
+    domain: light
+  condition: []
+  action:
+  - type: turn_off
+    device_id: 21aebc479fb3433ae6cdeb3748c35837
+    entity_id: light.svetlo_pod_verandou_light
+    domain: light
+  - type: turn_off
+    device_id: e7fac79a4813a1445247818212f6b046
+    entity_id: 059a76dcf45b0645526e71ca278164a1
+    domain: light
+  - type: turn_off
+    device_id: 882649511259abb90f0882b3f456433f
+    entity_id: 2a8ffa9348b51719ad41f0eb7e70972c
+    domain: light
+  - type: turn_off
+    device_id: 52349e87791a6fbcfda2765c51b3146c
+    entity_id: 09c3442ab236ee10b79ea553c9cee3d3
+    domain: light
+  - type: turn_off
+    device_id: 19f5bb9c37bd8bc1aed4b2fe8a792942
+    entity_id: 053bc8229ef2cc90f12251132efe0d2f
+    domain: light
+  - type: turn_off
+    device_id: 142f0fb8b8e9344f2cea653a4c1ed933
+    entity_id: 8bdc2e75c0a1ae64777616335a8b3230
+    domain: light
+  - type: turn_off
+    device_id: 8783fec79308acba68d70b50629a2ecb
+    entity_id: 6de6e41444a2dea5306a499e8a064a28
+    domain: light
+  - type: turn_off
+    device_id: d368a9667494777bb312c4a79bd87fcd
+    entity_id: ae9e38b3aab3e08dee59fbab5fee5d68
+    domain: light
+  mode: single
+- id: '1713121241758'
+  alias: Světelné upozornění na konec mycího/pracího programu
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - input_boolean.dokonceny_praci_myci_program
+    from: 'off'
+    to: 'on'
+  condition: []
+  action:
+  - service: scene.create
+    metadata: {}
+    data:
+      scene_id: before_notifiaction
+      snapshot_entities:
+      - light.notifikacni_svetla
+  - service: light.turn_on
+    metadata: {}
+    data:
+      rgb_color:
+      - 255
+      - 0
+      - 255
+      brightness_pct: 100
+    target:
+      entity_id: light.notifikacni_svetla
+  - service: input_boolean.turn_off
+    metadata: {}
+    data: {}
+    target:
+      entity_id: input_boolean.dokonceny_praci_myci_program
+  - service: input_boolean.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id: input_boolean.svetla_zobrazena_notifikace
+  mode: single
+- id: '1713196940294'
+  alias: Chodba - Rozsvícení světla na pohyb, když je málo světla
+  description: ''
+  trigger:
+  - type: motion
+    platform: device
+    device_id: 04a156985d7b23e906ee47d3ee974cd0
+    entity_id: b5e4d981415c350b0741fdd51f7fd518
+    domain: binary_sensor
+  condition:
+  - type: is_illuminance
+    condition: device
+    device_id: 04a156985d7b23e906ee47d3ee974cd0
+    entity_id: 9f2dbb9f69825008b7ed3505c3441864
+    domain: sensor
+    below: 10
+  - condition: state
+    entity_id: input_boolean.svetla_povolene_automaticke_rozsveceni
+    state: 'on'
+  - condition: state
+    entity_id: input_boolean.svetla_zobrazena_notifikace
+    state: 'off'
+  action:
+  - if:
+    - condition: state
+      entity_id: input_boolean.svetla_povoleny_nocni_rezim
+      state: 'on'
+    - condition: state
+      entity_id: schedule.nocni_doba
+      state: 'on'
+    then:
+    - service: light.turn_on
+      metadata: {}
+      data:
+        brightness_pct: 30
+        rgb_color:
+        - 255
+        - 198
+        - 77
+      target:
+        entity_id: light.chodba
+    else:
+    - service: light.turn_on
+      metadata: {}
+      data:
+        kelvin: 4500
+        brightness_pct: 100
+      target:
+        entity_id: light.chodba
+  mode: single
+- id: '1713202778110'
+  alias: Chodba - zhasnutí světla bez pohybu
+  description: ''
+  trigger:
+  - type: no_motion
+    platform: device
+    device_id: 04a156985d7b23e906ee47d3ee974cd0
+    entity_id: b5e4d981415c350b0741fdd51f7fd518
+    domain: binary_sensor
+    for:
+      hours: 0
+      minutes: 1
+      seconds: 0
+  condition:
+  - condition: state
+    entity_id: input_boolean.svetla_povolene_automaticke_rozsveceni
+    state: 'on'
+  - condition: state
+    entity_id: input_boolean.svetla_zobrazena_notifikace
+    state: 'off'
+  action:
+  - service: light.turn_off
+    metadata: {}
+    data: {}
+    target:
+      entity_id: light.chodba
+  mode: single

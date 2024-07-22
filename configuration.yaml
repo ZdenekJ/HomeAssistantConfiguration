@@ -1,0 +1,26 @@
+# Configure a default setup of Home Assistant (frontend, api, etc)
+default_config:
+
+# Text to speech
+tts:
+  - platform: google_translate
+
+group: !include groups.yaml
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+
+http:
+  server_port: 80
+
+recorder: !include recorder.yaml
+
+binary_sensor:
+  - platform: tod
+    name: Doba mezi západem a východem slunce
+    after: sunset
+    after_offset: "-01:00"
+    before: sunrise
+    before_offset: "01:00"
+    unique_id: doba_mezi_zapadem_a_vychodem_slunce
+influxdb: !include influxdb.yaml

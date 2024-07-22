@@ -1,0 +1,26 @@
+!*.yaml
+!.gitignore
+!*.md
+!*.sh
+!*.js*
+
+!node-red/
+
+
+home-assistant.log*
+
+# Ensure these YAML files are ignored, otherwise your secret data/credentials will leak.
+ip_bans.yaml
+secrets.yaml
+known_devices.yaml
+id_rsa*
+
+# Ignore folders.
+.ssh
+.storage
+.cloud
+.google.token
+custom_components/
+image/
+www/
+blueprints/

@@ -1,0 +1,10 @@
+substitutions:
+  name: loznice-svitidlo
+  friendly_name: "Světlo ložnice"
+packages:
+  athom.mini-switch: !include templates/athom-mini-switch.yaml
+esphome:
+  name_add_mac_suffix: false
+
+<<: !include components/ota.yaml
+<<: !include components/wifi.yaml
