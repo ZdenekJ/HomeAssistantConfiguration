@@ -6,7 +6,5 @@ packages:
 esphome:
   name_add_mac_suffix: false
 
-
-wifi:
-  ssid: !secret wifi_ssid
-  password: !secret wifi_password
+<<: !include components/ota.yaml
+<<: !include components/wifi.yaml
