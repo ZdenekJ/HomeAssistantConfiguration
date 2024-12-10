@@ -3,39 +3,41 @@ prepnuti_svetla_na_chodbe:
   sequence:
   - if:
     - condition: state
-      entity_id: light.tz3210_grzkr4mu_ts0505b_light
+      entity_id: light.chodba
       state: 'on'
     then:
     - type: turn_off
       device_id: 1fe37f45c974b4a36d1aaa2ce1800850
       entity_id: 0b328397a29b7b2baed58f9669080e1e
       domain: light
-    - service: input_boolean.turn_off
-      metadata: {}
+    - metadata: {}
       data: {}
       target:
         entity_id: input_boolean.svetla_zobrazena_notifikace
+      action: input_boolean.turn_off
     else:
-    - service: light.turn_on
-      target:
-        device_id: 1fe37f45c974b4a36d1aaa2ce1800850
+    - target:
+        entity_id:
+        - light.tz3210_grzkr4mu_ts0505b_svetlo
       data:
         kelvin: 4500
         brightness_pct: 100
-    - service: input_boolean.turn_off
-      metadata: {}
+      action: light.turn_on
+    - metadata: {}
       data: {}
       target:
         entity_id: input_boolean.svetla_zobrazena_notifikace
+      action: input_boolean.turn_off
     - delay:
         hours: 0
         minutes: 5
         seconds: 0
         milliseconds: 0
-    - service: light.turn_off
-      metadata: {}
+    - metadata: {}
       data: {}
       target:
-        device_id: 1fe37f45c974b4a36d1aaa2ce1800850
+        entity_id:
+        - light.tz3210_grzkr4mu_ts0505b_svetlo
+      action: light.turn_off
   mode: restart
   icon: mdi:lightbulb
