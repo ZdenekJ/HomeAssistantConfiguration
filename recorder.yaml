@@ -1,1 +1,4 @@
 db_url: !secret mariadb_url
+
+purge_keep_days: 30
+commit_interval: 20
