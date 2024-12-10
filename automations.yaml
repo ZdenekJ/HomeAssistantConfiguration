@@ -37,7 +37,7 @@
     domain: light
   - type: turn_off
     device_id: 52349e87791a6fbcfda2765c51b3146c
-    entity_id: 09c3442ab236ee10b79ea553c9cee3d3
+    entity_id: 36c3fa011cf17b73c8c221f568dd2600
     domain: light
   - type: turn_off
     device_id: 19f5bb9c37bd8bc1aed4b2fe8a792942
@@ -49,7 +49,7 @@
     domain: light
   - type: turn_off
     device_id: 8783fec79308acba68d70b50629a2ecb
-    entity_id: 6de6e41444a2dea5306a499e8a064a28
+    entity_id: 7bc118fbe195acd980ca4f075ba0cb6e
     domain: light
   - type: turn_off
     device_id: d368a9667494777bb312c4a79bd87fcd
@@ -125,8 +125,7 @@
       entity_id: schedule.nocni_doba
       state: 'on'
     then:
-    - service: light.turn_on
-      metadata: {}
+    - metadata: {}
       data:
         brightness_pct: 30
         rgb_color:
@@ -135,14 +134,15 @@
         - 77
       target:
         entity_id: light.chodba
+      action: light.turn_on
     else:
-    - service: light.turn_on
-      metadata: {}
+    - metadata: {}
       data:
         kelvin: 4500
         brightness_pct: 100
       target:
         entity_id: light.chodba
+      action: light.turn_on
   mode: single
 - id: '1713202778110'
   alias: Chodba - zhasnutí světla bez pohybu
