@@ -75,6 +75,9 @@ binary_sensor:
     pin:
       number: GPIO14
       mode: INPUT_PULLUP
+    filters:
+      - delayed_on: 50ms # Čeká 50ms, než je změna rozpoznána jako platná
+      - delayed_off: 50ms # Čeká 50ms, než je stav uvolnění potvrzen
     on_press:
       - light.toggle: mini_relay
 
