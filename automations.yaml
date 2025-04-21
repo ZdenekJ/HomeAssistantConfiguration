@@ -97,26 +97,26 @@
 - id: '1713196940294'
   alias: Chodba - Rozsvícení světla na pohyb, když je málo světla
   description: ''
-  trigger:
+  triggers:
   - type: motion
-    platform: device
     device_id: 04a156985d7b23e906ee47d3ee974cd0
     entity_id: b5e4d981415c350b0741fdd51f7fd518
     domain: binary_sensor
-  condition:
+    trigger: device
+  conditions:
   - type: is_illuminance
     condition: device
-    device_id: 04a156985d7b23e906ee47d3ee974cd0
-    entity_id: 9f2dbb9f69825008b7ed3505c3441864
+    device_id: 4792d196f0395f6f26fcedb6e52bec43
+    entity_id: e37b4578cbd50406551def834950635f
     domain: sensor
-    below: 10
+    below: 1000
   - condition: state
     entity_id: input_boolean.svetla_povolene_automaticke_rozsveceni
     state: 'on'
   - condition: state
     entity_id: input_boolean.svetla_zobrazena_notifikace
     state: 'off'
-  action:
+  actions:
   - if:
     - condition: state
       entity_id: input_boolean.svetla_povoleny_nocni_rezim
@@ -127,29 +127,28 @@
     then:
     - metadata: {}
       data:
-        brightness_pct: 30
+        brightness_pct: 35
         rgb_color:
         - 255
-        - 198
-        - 77
+        - 128
+        - 31
+      action: light.turn_on
       target:
         entity_id: light.chodba
-      action: light.turn_on
     else:
     - metadata: {}
       data:
         kelvin: 4500
         brightness_pct: 100
+      action: light.turn_on
       target:
         entity_id: light.chodba
-      action: light.turn_on
   mode: single
 - id: '1713202778110'
   alias: Chodba - zhasnutí světla bez pohybu
   description: ''
-  trigger:
+  triggers:
   - type: no_motion
-    platform: device
     device_id: 04a156985d7b23e906ee47d3ee974cd0
     entity_id: b5e4d981415c350b0741fdd51f7fd518
     domain: binary_sensor
@@ -157,17 +156,160 @@
       hours: 0
       minutes: 1
       seconds: 0
-  condition:
+    trigger: device
+  conditions:
   - condition: state
     entity_id: input_boolean.svetla_povolene_automaticke_rozsveceni
     state: 'on'
   - condition: state
     entity_id: input_boolean.svetla_zobrazena_notifikace
     state: 'off'
-  action:
-  - service: light.turn_off
-    metadata: {}
+  actions:
+  - metadata: {}
     data: {}
+    action: light.turn_off
     target:
       entity_id: light.chodba
+  mode: single
+- id: '1734018225266'
+  alias: Schody - Rozsvícení světla na pohyb, když je málo světla - s časovačem vypnutí
+  description: ''
+  triggers:
+  - type: motion
+    device_id: 24c1b44162d3c25cafb3a8be980b59fd
+    entity_id: c82bb2b0adf93c31c04910914d724066
+    domain: binary_sensor
+    trigger: device
+    id: schody_rozsviceni_na_pohyb
+  - trigger: state
+    entity_id:
+    - timer.schodiste_zhasnuti_svetla_zapnuteho_pohybem
+    from: active
+    to: idle
+    id: schody_zhasnuti_bez_pohybu
+  conditions:
+  - type: is_illuminance
+    condition: device
+    device_id: 4792d196f0395f6f26fcedb6e52bec43
+    entity_id: e37b4578cbd50406551def834950635f
+    domain: sensor
+    below: 1000
+  - condition: state
+    entity_id: input_boolean.svetla_povolene_automaticke_rozsveceni
+    state: 'on'
+  actions:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - schody_rozsviceni_na_pohyb
+      sequence:
+      - type: turn_on
+        device_id: 2c3cef7255edc14d1fa06dd5819a54ae
+        entity_id: aedac65e1361f94638d24012d247ee28
+        domain: light
+      - action: timer.start
+        metadata: {}
+        data: {}
+        target:
+          entity_id: timer.schodiste_zhasnuti_svetla_zapnuteho_pohybem
+    - conditions:
+      - condition: trigger
+        id:
+        - schody_zhasnuti_bez_pohybu
+      sequence:
+      - type: turn_off
+        device_id: 2c3cef7255edc14d1fa06dd5819a54ae
+        entity_id: aedac65e1361f94638d24012d247ee28
+        domain: light
+  mode: restart
+- id: '1734026109344'
+  alias: Schody - Rozsvícení světla spínačem s časovačem vypnutí bez pohybu
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - timer.schodiste_zhasnuti_svetla_zapnuteho_spinacem
+    from: active
+    to: idle
+    id: schody_zhasnuti_po_limitu
+  - type: turned_on
+    device_id: 2c3cef7255edc14d1fa06dd5819a54ae
+    entity_id: aedac65e1361f94638d24012d247ee28
+    domain: light
+    trigger: device
+    id: schody_rozsviceni_spinacem
+  conditions:
+  - condition: state
+    entity_id: timer.schodiste_zhasnuti_svetla_zapnuteho_pohybem
+    state: idle
+  actions:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - schody_rozsviceni_spinacem
+      sequence:
+      - action: timer.start
+        metadata: {}
+        data: {}
+        target:
+          entity_id: timer.schodiste_zhasnuti_svetla_zapnuteho_spinacem
+    - conditions:
+      - condition: trigger
+        id:
+        - schody_zhasnuti_po_limitu
+      - type: is_no_motion
+        condition: device
+        device_id: 24c1b44162d3c25cafb3a8be980b59fd
+        entity_id: c82bb2b0adf93c31c04910914d724066
+        domain: binary_sensor
+      sequence:
+      - type: turn_off
+        device_id: 2c3cef7255edc14d1fa06dd5819a54ae
+        entity_id: aedac65e1361f94638d24012d247ee28
+        domain: light
+    - conditions:
+      - condition: trigger
+        id:
+        - schody_zhasnuti_po_limitu
+      - type: is_motion
+        condition: device
+        device_id: 24c1b44162d3c25cafb3a8be980b59fd
+        entity_id: c82bb2b0adf93c31c04910914d724066
+        domain: binary_sensor
+      sequence:
+      - action: timer.start
+        metadata: {}
+        data:
+          duration: 00:01:00
+        target:
+          entity_id: timer.schodiste_zhasnuti_svetla_zapnuteho_spinacem
+  mode: restart
+- id: '1738859827721'
+  alias: Osvětlení po zapnutí TV večer
+  description: ''
+  triggers:
+  - device_id: c784c4fa7720c9643498f60ab644c23a
+    domain: media_player
+    entity_id: ad8206db8a9422805a2ca5a975c4217c
+    type: turned_on
+    trigger: device
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 15
+  conditions:
+  - type: is_illuminance
+    condition: device
+    device_id: 4792d196f0395f6f26fcedb6e52bec43
+    entity_id: e37b4578cbd50406551def834950635f
+    domain: sensor
+    below: 1000
+  actions:
+  - type: turn_on
+    device_id: 6aad35370f9aeaa2d05fb7e80863e7e6
+    entity_id: 1066cb659d815589ece4209082309c96
+    domain: light
+    brightness_pct: 100
   mode: single
