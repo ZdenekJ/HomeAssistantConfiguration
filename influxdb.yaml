@@ -15,9 +15,11 @@ include:
     - sensor.venkovni_teplota
     - sensor.venkovni_tlak
     - sensor.venkovni_vlhkost
-    - sensor.thermometer_balcony_battery_level
-    - sensor.chodba_pohybovy_senzor_baterie
-    - sensor.motion_senzor_bathroom_battery_level
+    - sensor.lumi_lumi_weather_baterie
+    - sensor.lumi_lumi_sensor_motion_aq2_baterie
+    - sensor.koupelna_senzor_pohybu_baterie_2
+    - sensor.balkon_senzor_osvetleni_baterie
+    - sensor.schody_senzor_pohybu_baterie_2
     - sensor.system_monitor_pouziti_procesoru
     - sensor.system_monitor_propustnost_do_site_enp0s18
     - sensor.system_monitor_propustnost_ze_site_enp0s18

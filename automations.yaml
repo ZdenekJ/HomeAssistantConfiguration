@@ -313,3 +313,188 @@
     domain: light
     brightness_pct: 100
   mode: single
+- id: wled_reolink_person_vecer
+  alias: WLED pásek - Reolink person (večer) ON/OFF
+  description: ''
+  triggers:
+  - id: person_on_2s
+    entity_id: binary_sensor.dvorek_osoba
+    to: 'on'
+    for: 00:00:02
+    trigger: state
+  - id: person_off_3m
+    entity_id: binary_sensor.dvorek_osoba
+    to: 'off'
+    for: 00:03:00
+    trigger: state
+  conditions: []
+  actions:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: person_on_2s
+      - condition: state
+        entity_id: input_boolean.svetla_povolene_automaticke_rozsveceni
+        state: 'on'
+      - condition: numeric_state
+        entity_id: sensor.balkon_senzor_osvetleni_osvetleni
+        below: 1000
+      sequence:
+      - target:
+          entity_id: light.wled
+        data:
+          brightness_pct: 100
+          rgbw_color:
+          - 255
+          - 255
+          - 255
+          - 255
+        action: light.turn_on
+      - target:
+          entity_id: input_boolean.led_pasek_rozsvicen_kamerou
+        action: input_boolean.turn_on
+    - conditions:
+      - condition: trigger
+        id: person_off_3m
+      - condition: state
+        entity_id: input_boolean.svetla_povolene_automaticke_rozsveceni
+        state: 'on'
+      - condition: state
+        entity_id: input_boolean.led_pasek_rozsvicen_kamerou
+        state: 'on'
+      sequence:
+      - target:
+          entity_id: light.wled
+        action: light.turn_off
+      - target:
+          entity_id: input_boolean.led_pasek_rozsvicen_kamerou
+        action: input_boolean.turn_off
+  mode: single
+- id: wled_reolink_person_vecer
+  alias: WLED pásek - Reolink person (večer) ON/OFF
+  description: ''
+  triggers:
+  - id: person_on_2s
+    entity_id: binary_sensor.dvorek_osoba
+    to: 'on'
+    for: 00:00:02
+    trigger: state
+  - id: person_off_3m
+    entity_id: binary_sensor.dvorek_osoba
+    to: 'off'
+    for: 00:03:00
+    trigger: state
+  conditions: []
+  actions:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: person_on_2s
+      - condition: state
+        entity_id: input_boolean.svetla_povolene_automaticke_rozsveceni
+        state: 'on'
+      - condition: numeric_state
+        entity_id: sensor.balkon_senzor_osvetleni_osvetleni
+        below: 1000
+      sequence:
+      - target:
+          entity_id: light.wled
+        data:
+          brightness_pct: 100
+          rgbw_color:
+          - 255
+          - 255
+          - 255
+          - 255
+        action: light.turn_on
+      - target:
+          entity_id: input_boolean.led_pasek_rozsvicen_kamerou
+        action: input_boolean.turn_on
+    - conditions:
+      - condition: trigger
+        id: person_off_3m
+      - condition: state
+        entity_id: input_boolean.svetla_povolene_automaticke_rozsveceni
+        state: 'on'
+      - condition: state
+        entity_id: input_boolean.led_pasek_rozsvicen_kamerou
+        state: 'on'
+      sequence:
+      - target:
+          entity_id: light.wled
+        action: light.turn_off
+      - target:
+          entity_id: input_boolean.led_pasek_rozsvicen_kamerou
+        action: input_boolean.turn_off
+  mode: single
+- id: '1766074965807'
+  alias: WLED pásek
+  description: ''
+  triggers:
+  - type: turned_on
+    device_id: 0092948e71e2c5b6fc6840156848a622
+    entity_id: 45c02cb1ca63efde79180eafb36165c1
+    domain: binary_sensor
+    trigger: device
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 2
+    id: person_on
+  - type: turned_off
+    device_id: 0092948e71e2c5b6fc6840156848a622
+    entity_id: 45c02cb1ca63efde79180eafb36165c1
+    domain: binary_sensor
+    trigger: device
+    id: person_off
+    for:
+      hours: 0
+      minutes: 2
+      seconds: 0
+  conditions:
+  - condition: state
+    entity_id: input_boolean.svetla_povolene_automaticke_rozsveceni
+    state:
+    - 'on'
+  actions:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - person_on
+      - condition: numeric_state
+        entity_id: sensor.balkon_senzor_osvetleni_osvetleni
+        below: 50
+      sequence:
+      - action: light.turn_on
+        metadata: {}
+        data:
+          color_temp_kelvin: 6500
+          brightness_step_pct: 100
+        target:
+          entity_id: light.wled
+      - action: input_boolean.turn_on
+        metadata: {}
+        data: {}
+        target:
+          entity_id: input_boolean.led_pasek_rozsvicen_kamerou
+    - conditions:
+      - condition: trigger
+        id:
+        - person_off
+      - condition: state
+        entity_id: input_boolean.led_pasek_rozsvicen_kamerou
+        state:
+        - 'on'
+      sequence:
+      - action: light.turn_off
+        metadata: {}
+        data: {}
+        target:
+          entity_id: light.wled
+      - action: input_boolean.turn_off
+        metadata: {}
+        data: {}
+        target:
+          entity_id: input_boolean.led_pasek_rozsvicen_kamerou
+  mode: single

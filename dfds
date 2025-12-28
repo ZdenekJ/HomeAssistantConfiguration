@@ -1,0 +1,9 @@
+core.repositoryformatversion=0
+core.filemode=true
+core.bare=false
+core.logallrefupdates=true
+core.sshcommand=ssh -i /root/homeassistant/.ssh/id_rsa -F /dev/null
+remote.origin.url=git@github.com:ZdenekJ/HomeAssistantConfiguration.git
+remote.origin.fetch=+refs/heads/*:refs/remotes/origin/*
+branch.main.remote=origin
+branch.main.merge=refs/heads/main

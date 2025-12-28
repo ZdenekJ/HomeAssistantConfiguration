@@ -1,10 +1,8 @@
 substitutions:
-  name: zahrada
-  friendly_name: "zahrada"
+  device_name: zahrada
+  friendly_name: "Zahrada"
 packages:
-  athom.mini-switch: !include templates/athom-mini-switch.yaml
-esphome:
-  name_add_mac_suffix: false
+  - !include templates/sonoff-mini-r4-switch-with-button.yaml
 
 <<: !include components/ota.yaml
 <<: !include components/wifi.yaml

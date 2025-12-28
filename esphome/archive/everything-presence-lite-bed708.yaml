@@ -1,0 +1,19 @@
+substitutions:
+  name: everything-presence-lite-bed708
+  friendly_name: Everything Presence Lite bed708
+
+packages:
+  EverythingSmartTechnology.Everything_Presence_Lite: github://everythingsmarthome/everything-presence-lite/everything-presence-lite-ha.yaml@main
+  
+esphome:
+  name: ${name}
+  name_add_mac_suffix: false
+  friendly_name: ${friendly_name}
+api:
+  encryption:
+    key: KJENewqKV2cszElWj6POOj/u45LnD+lqNYnx8/f6E3M=
+
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password

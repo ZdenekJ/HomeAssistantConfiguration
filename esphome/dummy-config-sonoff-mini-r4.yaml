@@ -1,0 +1,8 @@
+substitutions:
+  device_name: dummy-sonoff
+  friendly_name: "Dummy sonoff"
+packages:
+  - !include templates/sonoff-mini-r4-switch.yaml
+
+<<: !include components/ota.yaml
+<<: !include components/wifi.yaml

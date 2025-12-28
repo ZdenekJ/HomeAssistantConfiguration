@@ -1,0 +1,38 @@
+esphome:
+  name: neon-shield
+  friendly_name: "Neon"
+  name_add_mac_suffix: false
+
+<<: !include components/ota.yaml
+<<: !include components/wifi.yaml
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+api:
+
+logger:
+  baud_rate: 0
+
+mdns:
+  disabled: false
+
+web_server:
+  port: 80
+
+captive_portal:
+    
+switch:
+  - platform: gpio
+    name: "CH1"
+    pin: GPIO12
+    id: ch1
+    restore_mode: RESTORE_DEFAULT_OFF
+
+  - platform: gpio
+    name: "CH2"
+    pin: GPIO13
+    id: ch2
+    restore_mode: RESTORE_DEFAULT_OFF
